@@ -44,7 +44,6 @@ def runSetup():
     gcs_oauth2_boto_plugin = 'gcs_oauth2_boto_plugin==1.14'
     apacheLibcloud = 'apache-libcloud==2.2.1'
     cwltool = 'cwltool<=2.0.20200126090152'
-    schemaSalad = 'schema-salad<6,>=5.0.20200126033820'
     galaxyLib = 'galaxy-lib==18.9.2'
     htcondor = 'htcondor>=8.6.0'
     kubernetes = 'kubernetes>=10, <11'
@@ -80,7 +79,6 @@ def runSetup():
         pycryptodome]
     cwl_reqs = [
         cwltool,
-        schemaSalad,
         galaxyLib]
     encryption_reqs = [
         pynacl]
