@@ -16,7 +16,6 @@ import sys
 import os
 import copy
 
-
 # setting the 'CPPFLAGS' flag specifies the necessary cython dependency for "http-parser", for more info:
 # toil issue: https://github.com/DataBiosphere/toil/issues/2924
 # very similar to this issue: https://github.com/mcfletch/pyopengl/issues/11

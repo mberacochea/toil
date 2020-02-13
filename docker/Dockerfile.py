@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import print_function
 import os
 import sys
@@ -22,11 +21,7 @@ sdistName = os.environ['_TOIL_SDIST_NAME']
 
 # Make sure to install packages into the pip for the version of Python we are
 # building for.
-<<<<<<< HEAD
 pip = 'python{}.{} -m pip'.format(sys.version_info[0], sys.version_info[1])
-=======
-pip = 'pip{}'.format(sys.version_info[0])
->>>>>>> Make an appliance for Python 3 (#2937)
 
 
 dependencies = ' '.join(['libffi-dev',  # For client side encryption for extras with PyNACL
@@ -130,10 +125,14 @@ print(heredoc('''
 
     # Install s3am (--never-download prevents silent upgrades to pip, wheel and setuptools)
 <<<<<<< HEAD
+<<<<<<< HEAD
     RUN virtualenv --python python3.6 --never-download /home/s3am \
 =======
     RUN virtualenv --python python3 --never-download /home/s3am \
 >>>>>>> Make an appliance for Python 3 (#2937)
+=======
+    RUN virtualenv --python python3.6 --never-download /home/s3am \
+>>>>>>> 4fb0438764d2d274e8d581bf4f06437e5430227f
         && /home/s3am/bin/pip install s3am==2.0 \
         && ln -s /home/s3am/bin/s3am /usr/local/bin/
 
