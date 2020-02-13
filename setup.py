@@ -45,6 +45,7 @@ def runSetup():
     apacheLibcloud = 'apache-libcloud==2.2.1'
     cwltool = 'cwltool<=2.0.20200126090152'
     galaxyLib = 'galaxy-lib==18.9.2'
+    galaxyToolUtil = 'galaxy-tool-util'
     htcondor = 'htcondor>=8.6.0'
     kubernetes = 'kubernetes>=10, <11'
     pytx = 'pytz>=2012'
@@ -79,7 +80,8 @@ def runSetup():
         pycryptodome]
     cwl_reqs = [
         cwltool,
-        galaxyLib]
+        galaxyLib,
+        galaxyToolUtil]
     encryption_reqs = [
         pynacl]
     google_reqs = [
