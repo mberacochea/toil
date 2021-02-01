@@ -773,10 +773,13 @@ def toilStageFiles(file_store: AbstractFileStore,
                 if not os.path.exists(os.path.dirname(p.target)):
                     os.makedirs(os.path.dirname(p.target), 0o0755)
                 if p.type == "File" and not os.path.exists(p.target):
-                    file_store.exportFile(FileID.unpack(p.resolved[7:]), "file://" + p.target)
+                    logger.debug("symlinking in ToilPathMapper " + p.resolved[7:]) + " " + p.target)
+                    file_store.writeGlobalFile(FileID.unpack(p.resolved[7:]), "file://" + p.target, symlink=True)
+                    # file_store.exportFile(FileID.unpack(p.resolved[7:]), "file://" + p.target)
                 elif p.type == "Directory" and not os.path.exists(p.target):
                     os.makedirs(p.target, 0o0755)
                 elif p.type == "CreateFile":
+                    logger.debug("Create " + p.target)
                     with open(p.target, "wb") as n:
                         n.write(p.resolved.encode("utf-8"))
 
