@@ -85,10 +85,10 @@ class NonCachingFileStore(AbstractFileStore):
             # Finally delete the job from the worker
             os.remove(self.jobStateFile)
 
-    def writeGlobalFile(self, localFileName, cleanup=False):
+    def writeGlobalFile(self, localFileName, cleanup=False, symlink=False):
         absLocalFileName = self._resolveAbsoluteLocalPath(localFileName)
         creatorID = self.jobGraph.jobStoreID
-        fileStoreID = self.jobStore.writeFile(absLocalFileName, creatorID, cleanup)
+        fileStoreID = self.jobStore.writeFile(absLocalFileName, creatorID, cleanup, symlink=symlink)
         self.localFileMap[fileStoreID].append(absLocalFileName)
         return FileID.forPath(fileStoreID, absLocalFileName)
 

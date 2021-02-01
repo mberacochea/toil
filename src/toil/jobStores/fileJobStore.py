@@ -388,10 +388,13 @@ class FileJobStore(AbstractJobStore):
         # Glue it all together
         return '_'.join(parts)
 
-    def writeFile(self, localFilePath, jobStoreID=None, cleanup=False):
+    def writeFile(self, localFilePath, jobStoreID=None, cleanup=False, symlink=False):
         absPath = self._getUniqueFilePath(localFilePath, jobStoreID, cleanup)
         relPath = self._getFileIdFromPath(absPath)
-        atomic_copy(localFilePath, absPath)
+        if symlink:
+            os.symlink(localFilePath, absPath)
+        else:
+            atomic_copy(localFilePath, absPath)
         return relPath
 
     @contextmanager

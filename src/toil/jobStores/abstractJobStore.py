@@ -797,7 +797,7 @@ class AbstractJobStore(with_metaclass(ABCMeta, object)):
     ##########################################
 
     @abstractmethod
-    def writeFile(self, localFilePath, jobStoreID=None, cleanup=False):
+    def writeFile(self, localFilePath, jobStoreID=None, cleanup=False, symlink=False):
         """
         Takes a file (as a path) and places it in this job store. Returns an ID that can be used
         to retrieve the file at a later time.  The file is written in a atomic manner.  It will

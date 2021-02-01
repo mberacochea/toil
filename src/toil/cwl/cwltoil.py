@@ -716,10 +716,10 @@ def uploadFile(uploadfunc: Any,
     logger.debug("Sending file at: %s", file_metadata["location"])
 
 
-def writeGlobalFileWrapper(file_store: AbstractFileStore, fileuri: str) -> str:
+def writeGlobalFileWrapper(file_store: AbstractFileStore, fileuri: str, symlink: bool = False) -> str:
     """Wrap writeGlobalFile to accept file:// URIs"""
     return file_store.writeGlobalFile(
-        schema_salad.ref_resolver.uri_file_path(fileuri))
+        schema_salad.ref_resolver.uri_file_path(fileuri), symlink=symlink)
 
 
 class ResolveIndirect(Job):
@@ -1006,7 +1006,7 @@ class CWLJob(Job):
 
         # write the outputs into the jobstore
         adjustFileObjs(output, functools.partial(
-            uploadFile, functools.partial(writeGlobalFileWrapper, file_store),
+            uploadFile, functools.partial(writeGlobalFileWrapper, file_store, symlink=True),
             index, existing))
 
         # metadata[process_uuid] = {
