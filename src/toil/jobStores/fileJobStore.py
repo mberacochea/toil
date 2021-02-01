@@ -270,13 +270,14 @@ class FileJobStore(AbstractJobStore):
         # linking is not done be default because of issue #1755
         srcPath = self._extractPathFromUrl(srcURL)
         if self.linkImports or symlink:
+            logger.debug("copyOrLink linking " + os.path.realpath(srcPath) + " to " + destPath)
             os.symlink(os.path.realpath(srcPath), destPath)
         else:
             atomic_copy(srcPath, destPath)
 
     def _importFile(self, otherCls, url, sharedFileName=None, hardlink=False, symlink=False):
         if issubclass(otherCls, FileJobStore):
-            logger.debug("_importFile inner")
+            logger.debug("issubclass(otherCls, FileJobStore)")
             if sharedFileName is None:
                 absPath = self._getUniqueFilePath(url.path)  # use this to get a valid path to write to in job store
                 with self.optionalHardCopy(hardlink):
