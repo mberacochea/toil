@@ -596,6 +596,7 @@ class ToilFsAccess(cwltool.stdfsaccess.StdFsAccess):
         # (among other things) so this should not error on missing files.
         # See: https://github.com/common-workflow-language/cwltool/blob/beab66d649dd3ee82a013322a5e830875e8556ba/cwltool/stdfsaccess.py#L43
         if path.startswith("toilfs:"):
+            logger.debug("symlinking _abs: " + path[7:])
             return self.file_store.readGlobalFile(FileID.unpack(path[7:]))
         return super(ToilFsAccess, self)._abs(path)
 
@@ -604,7 +605,8 @@ def toil_get_file(file_store: AbstractFileStore, index: dict, existing: dict, fi
     """Get path to input file from Toil jobstore."""
     if not file_store_id.startswith("toilfs:"):
         return file_store.jobStore.getPublicUrl(file_store.jobStore.importFile(file_store_id))
-    src_path = file_store.readGlobalFile(FileID.unpack(file_store_id[7:]))
+    src_path = file_store.readGlobalFile(FileID.unpack(file_store_id[7:]), symlink=True)
+    logger.debug("symlinking toil_get_file: " + src_path)
     index[src_path] = file_store_id
     existing[file_store_id] = src_path
     return schema_salad.ref_resolver.file_uri(src_path)
