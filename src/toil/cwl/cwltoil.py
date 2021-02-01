@@ -644,7 +644,8 @@ def write_file(writeFunc: Any, index: dict, existing: dict, file_uri: str) -> st
         return index[file_uri]
 
 def prepareDirectoryForUpload(directory_metadata: dict,
-                              skip_broken: bool = False) -> None:
+                              skip_broken: bool = False,
+                              **kwargs) -> None:
     """
     Prepare a Directory object to be uploaded.
 
