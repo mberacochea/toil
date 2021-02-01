@@ -597,7 +597,7 @@ class ToilFsAccess(cwltool.stdfsaccess.StdFsAccess):
         # See: https://github.com/common-workflow-language/cwltool/blob/beab66d649dd3ee82a013322a5e830875e8556ba/cwltool/stdfsaccess.py#L43
         if path.startswith("toilfs:"):
             logger.debug("symlinking _abs: " + path[7:])
-            return self.file_store.readGlobalFile(FileID.unpack(path[7:]))
+            return self.file_store.readGlobalFile(FileID.unpack(path[7:]), symlink=True)
         return super(ToilFsAccess, self)._abs(path)
 
 
@@ -682,7 +682,8 @@ def uploadFile(uploadfunc: Any,
                fileindex: dict,
                existing: dict,
                file_metadata: dict,
-               skip_broken: bool = False) -> None:
+               skip_broken: bool = False,
+               symlink: bool = False) -> None:
     """
     Update a file object so that the location is a reference to the toil file
     store, writing it to the file store if necessary.
@@ -701,8 +702,12 @@ def uploadFile(uploadfunc: Any,
         else:
             raise cwltool.errors.WorkflowException(
                 "File is missing: %s" % file_metadata["location"])
-    file_metadata["location"] = write_file(
-        uploadfunc, fileindex, existing, file_metadata["location"])
+    args = [uploadfunc, fileindex, existing, file_metadata["location"]]
+    if symlink:
+        logger.debug("write_file - symlinking: " + file_metadata["location"])
+        file_metadata["location"] = write_file(*args, symlink=True)
+    else:
+        file_metadata["location"] = write_file(*args)
         
     logger.debug("Sending file at: %s", file_metadata["location"])
 
@@ -1721,7 +1726,8 @@ def main(args: Union[List[str]] = None, stdout: TextIO = sys.stdout) -> int:
 
                 adjustFileObjs(inner_tool, functools.partial(
                     uploadFile, toil.importFile, fileindex, existing,
-                    skip_broken=True))  # actually import files into the jobstore
+                    skip_broken=True,
+                    symlink=True))  # actually import files into the jobstore
 
             import_files(tool.tool)
 

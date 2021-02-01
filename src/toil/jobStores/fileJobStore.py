@@ -314,7 +314,7 @@ class FileJobStore(AbstractJobStore):
         return os.stat(cls._extractPathFromUrl(url)).st_size
 
     @classmethod
-    def _readFromUrl(cls, url, writable):
+    def _readFromUrl(cls, url, writable, symlink=False):
         """
         Writes the contents of a file to a source (writes url to writable)
         using a ~10Mb buffer.
@@ -322,9 +322,14 @@ class FileJobStore(AbstractJobStore):
         :param str url: A path as a string of the file to be read from.
         :param object writable: An open file object to write to.
         """
-        
+        path = cls._extractPathFromUrl(url)
+        if symlink:
+            logger.debug("symlinking: " + path + " ->" + writable.name)
+            os.symlink(path, writable.name)
+            with open(path, 'rb') as readable:
+                return readable.tell()
         # we use a ~10Mb buffer to improve speed
-        with open(cls._extractPathFromUrl(url), 'rb') as readable:
+        with open(path, 'rb') as readable:
             shutil.copyfileobj(readable, writable, length=cls.BUFFER_SIZE)
             # Return the number of bytes we read when we reached EOF.
             return readable.tell()

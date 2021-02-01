@@ -1015,7 +1015,7 @@ class Toil(object):
             logger.debug('Injecting user script %s into batch system.', userScriptResource)
             self._batchSystem.setUserScript(userScriptResource)
 
-    def importFile(self, srcUrl, sharedFileName=None):
+    def importFile(self, srcUrl, sharedFileName=None, symlink=False):
         """
         Imports the file at the given URL into job store.
 
@@ -1023,7 +1023,7 @@ class Toil(object):
         full description
         """
         self._assertContextManagerUsed()
-        return self._jobStore.importFile(srcUrl, sharedFileName=sharedFileName)
+        return self._jobStore.importFile(srcUrl, sharedFileName=sharedFileName, symlink=symlink)
 
     def exportFile(self, jobStoreFileID, dstUrl):
         """
