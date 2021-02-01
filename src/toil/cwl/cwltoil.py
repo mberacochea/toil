@@ -612,7 +612,7 @@ def toil_get_file(file_store: AbstractFileStore, index: dict, existing: dict, fi
     return schema_salad.ref_resolver.file_uri(src_path)
 
 
-def write_file(writeFunc: Any, index: dict, existing: dict, file_uri: str) -> str:
+def write_file(writeFunc: Any, index: dict, existing: dict, file_uri: str, symlink: bool = False) -> str:
     """
     Write a file into the Toil jobstore.
 
@@ -636,7 +636,10 @@ def write_file(writeFunc: Any, index: dict, existing: dict, file_uri: str) -> st
             else:
                 rp = file_uri
             try:
-                index[file_uri] = "toilfs:" + writeFunc(rp).pack()
+                if symlink:
+                    index[file_uri] = "toilfs:" + writeFunc(rp, symlink=True).pack()
+                else:
+                    index[file_uri] = "toilfs:" + writeFunc(rp).pack()
                 existing[index[file_uri]] = file_uri
             except Exception as e:
                 logger.error("Got exception '%s' while copying '%s'", e, file_uri)
