@@ -302,6 +302,7 @@ class FileJobStore(AbstractJobStore):
             if self.moveExports:
                 self._move_and_linkback(srcPath, destPath)
             else:
+                logger.debug("_exportFile" + srcPath + " " + destPath)
                 atomic_copy(srcPath, destPath)
         else:
             super(FileJobStore, self)._defaultExportFile(otherCls, jobStoreFileID, url)
@@ -347,6 +348,7 @@ class FileJobStore(AbstractJobStore):
         :param object readable: An open file object to read from.
         """
         # we use a ~10Mb buffer to improve speed
+        logger.debug("_writeToUrl" + url)
         atomic_copyobj(readable, cls._extractPathFromUrl(url), length=cls.BUFFER_SIZE)
 
     @staticmethod
@@ -392,8 +394,10 @@ class FileJobStore(AbstractJobStore):
         absPath = self._getUniqueFilePath(localFilePath, jobStoreID, cleanup)
         relPath = self._getFileIdFromPath(absPath)
         if symlink:
+            logger.debug("writeFile symlink: " + localFilePath + " " + absPath)
             os.symlink(localFilePath, absPath)
         else:
+            logger.debug("writeFile symlink: " + localFilePath + " " + absPath)
             atomic_copy(localFilePath, absPath)
         return relPath
 
@@ -419,12 +423,16 @@ class FileJobStore(AbstractJobStore):
             # The files are already the same file. We can't copy on eover the other.
             return
 
+        logger.debug("updateFile" + localFilePath + " " + jobStoreFilePath)
+
         atomic_copy(localFilePath, jobStoreFilePath)
 
     def readFile(self, jobStoreFileID, localFilePath, symlink=False):
         self._checkJobStoreFileID(jobStoreFileID)
         jobStoreFilePath = self._getFilePathFromId(jobStoreFileID)
         localDirPath = os.path.dirname(localFilePath)
+
+        logger.debug("readFile" + jobStoreFilePath + localFilePath + str(symlink))
 
         if not symlink and os.path.islink(localFilePath):
             # We had a symlink and want to clobber it with a hardlink or copy.
