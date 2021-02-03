@@ -191,7 +191,7 @@ class AbstractFileStore(with_metaclass(ABCMeta, object)):
 
     # Functions related to reading, writing and removing files to/from the job store
     @abstractmethod
-    def writeGlobalFile(self, localFileName, cleanup=False):
+    def writeGlobalFile(self, localFileName, cleanup=False, symlink=False):
         """
         Takes a file (as a path) and uploads it to the job store.
 
