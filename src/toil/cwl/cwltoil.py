@@ -603,8 +603,9 @@ class ToilFsAccess(cwltool.stdfsaccess.StdFsAccess):
 def toil_get_file(file_store: AbstractFileStore, index: dict, existing: dict, file_store_id: str) -> str:
     """Get path to input file from Toil jobstore."""
     if not file_store_id.startswith("toilfs:"):
-        src_path = file_store.readGlobalFile(FileID.unpack(file_store_id), symlink=True)
-        return file_store.jobStore.getPublicUrl(src_path)
+        return file_store.jobStore.getPublicUrl(
+            file_store.jobStore.importFile(file_store_id, symlink=True)
+        )
 
     src_path = file_store.readGlobalFile(FileID.unpack(file_store_id[7:]), symlink=True)
     index[src_path] = file_store_id
